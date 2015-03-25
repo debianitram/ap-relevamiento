@@ -1,0 +1,7 @@
+gluino/*
+databases/*
+*.py[co]
+!.gitignore
+*.log
+*.*~
+

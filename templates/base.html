@@ -1,0 +1,66 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset='utf-8' />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta
+	content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+	name='viewport' />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Estilos -->
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"
+	media="screen" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
+<link
+<!--ESTILOS DE ALFREDO-->
+
+<link rel="stylesheet" type="text/css"	href="{{STATIC_URL}}css/metro-bootstrap.min.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/font-awesome.min.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/personalizado.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/weather.css">
+<!-- FIN DE ESTADO DE ALFREDO -->
+
+<script src="{% static 'js/jquery-1.10.2.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.simpleWeather.min.js' %}"></script>
+
+{% block scripts %} {% endblock %}
+
+<title>{% block title %}{% endblock %}</title>
+
+</head>
+
+<body style="background-image: url('{{STATIC_URL}}images/background4.jpg');">
+	<div id="search">
+		<button type="button" class="close">×</button>
+		<form>
+			<input type="search" value="" placeholder="Escriba lo que desea buscar..." />
+			<button type="submit" class="btn btn-primary">Buscar!</button>
+		</form>
+	</div>
+	{% include 'nav-header.html' %}
+	<!-- class="main" -->
+	<div class='main'>
+		<!-- NAVBAR-->			
+			
+		<!-- END NAVBAR-->
+
+		<!-- CONTENT -->
+		
+			<!-- class="container" -->
+			<div class="container">{% block content %} {% endblock %}
+			<!-- END class="container" -->
+		
+		<!-- END CONTENT -->
+	<!-- END class="main" -->
+	
+	<!-- FOOTER -->
+	{% include "foot-page.html" %}</div>
+	<!-- END FOOTER -->
+</div>
+</body>
+
+</html>
