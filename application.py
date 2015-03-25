@@ -1,4 +1,5 @@
-from bottle import Bottle, run, request, get, post, static_file, redirect
+import os
+from bottle import route, run, request, get, post, static_file, redirect
 from gluino import wrapper, SQLFORM, cache, IS_NOT_EMPTY
 from gluino import DAL, Field
 
@@ -7,7 +8,7 @@ wrapper.debug = True
 wrapper.redirect = lambda status, url: redirect(url)
 
 # App Bottle
-# app = Bottle()
+appdir = os.path.dirname(os.path.dirname(__file__))
 
 
 # Create datebase and table
@@ -33,7 +34,12 @@ def index():
     people = db(db.test).select()
     return locals()
     
- 
+
+
+@route('/statics/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root=os.path.join(appdir, 'statics'))
+
 
 if __name__ == '__main__':
     run(host='localhost', port='8080', debug=True)
