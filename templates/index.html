@@ -3,43 +3,54 @@
 <div class='row'>
     <div id='columns-view' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
         <div class='row-fluid'><!-- Form Search -->
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Código Piquete">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Buscar</button>
-                    <button class='btn btn-default' type='button'>
-                        <span class='glyphicon glyphicon-chevron-left'>
-                    </button>
-                    <button class='btn btn-default' type='button'>
-                        <span class='glyphicon glyphicon-chevron-right'>
-                    </button>
-                    
-                </span>
-            </div>
+            <form action='.' method='get'>
+                <div class="input-group">
+                    <input type="number" class="form-control" name='q' placeholder="Código Piquete">
+                    <input type='hidden' name='page' value='{{=page}}'>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="sumbit"> Buscar </button>
+                        {{if page:}}
+                            <a href="/?page={{=page-1}}" class='btn btn-default'>
+                                <span class='glyphicon glyphicon-chevron-left'></span>
+                            </a>
+                        {{pass}}
+                        <a href="/?page={{=page+1}}" class='btn btn-default'>
+                            <span class='glyphicon glyphicon-chevron-right'></span>
+                        </a>
+                    </span>
+                </div>
+            </form>
         </div><!-- End Form Search -->
 
         <div class='row-fluid' style='margin-top:5px;'>
             <div class='well well-sm'>
-                <table class='table table-condensed table-bordered'>
-                    <tbody>
-                        <tr>
-                            <td><strong>Nº</strong></td>
-                            <td><span style='color:red'>{{=col[0]['numero']}}</span></td>
-                            <td><strong>Emplazamiento</strong></td>
-                            <td>{{=col[0]['emplazamiento']}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Orientación</strong></td>
-                            <td>{{='Horizonal' if col[0]['grupo'] == 'h' else 'Vertical'}}</td>
-                            <td><strong>Altura</strong></td>
-                            <td>{{=col[0]['altura']}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Dirección</strong></td>
-                            <td colspan="3">{{=col[0]['direccion']}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                {{if col:}}
+                    <table class='table table-condensed table-bordered'>
+                        <tbody>
+                            <tr>
+                                <td><strong>Nº</strong></td>
+                                <td><span style='color:red'>{{=col['numero']}}</span></td>
+                                <td><strong>Emplazamiento</strong></td>
+                                <td>{{=col['emplazamiento']}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Orientación</strong></td>
+                                <td>{{='Horizonal' if col['grupo'] == 'h' else 'Vertical'}}</td>
+                                <td><strong>Altura</strong></td>
+                                <td>{{=col['altura']}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dirección</strong></td>
+                                <td colspan="3">{{=col['direccion']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{else:}}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Alerta!</strong>
+                        No se encontraron coincidencias en {{=query}}
+                    </div>
+                {{pass}}
             </div>
         </div>
     </div>
@@ -108,7 +119,7 @@
                     <div class="form-group">
                         <label for="relevamiento_lampara" class="col-sm-2 control-label">Lamparas</label>
                         <div class="col-sm-10">
-                            <button type='button' class='btn btn-default btn-sm' data-target='add-lampara'>Agregar</button>
+                            <button id='add_lampara' type='button' class='btn btn-default btn-sm'>Agregar</button>
                         </div>
                     </div>
 
@@ -150,11 +161,50 @@
                     
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <a href="#" class="btn btn-default btn-sm">Guardar</a>
+                            <a href="#" class="btn btn-primary btn-sm">Guardar</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div> <!-- End Form Relevamiento -->    
-</div>  
+</div> 
+
+<!-- Begin Modal Add Lamparas -->
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Agregar Lámpara al Relevamiento</h4>
+            </div>
+            <div class="modal-body">
+                <form id='form-lampara'>
+                    <div class="form-group">
+                        <label for="lampara_tipo" class="control-label">Tipo</label>
+                        <input type="string" class="form-control" id="lampara_tipo" name='tipo'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_estado" class="control-label">Estado</label>
+                        <input type="string" class="form-control" id="lampara_estado" name='estado'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_modelo_artefacto" class="control-label">Modelo Artefacto</label>
+                        <input type="string" class="form-control" id="lampara_modelo_artefacto" name='modelo_artefacto'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_potencia" class="control-label">Potencia</label>
+                        <input type="number" class="form-control" id="lampara_potencia" name='potencia'>
+                    </div>
+                    <div class='form-group'>
+                        <button type='submit' class='btn btn-primary btn-sm'> Guardar </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Modal -->
