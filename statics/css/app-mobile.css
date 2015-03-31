@@ -1,0 +1,12 @@
+body {
+  padding-top: 60px;
+  overflow: hidden;
+}
+
+#down {
+    overflow-y: scroll;
+}
+
+#columns-view {
+    padding-left: 20px;
+}
