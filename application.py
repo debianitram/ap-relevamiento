@@ -23,13 +23,29 @@ appdir = os.path.dirname(os.path.dirname(__file__))
 @post('/')
 @wrapper(view='templates/index.html')
 def index():
-    # View for Columns
     query = request.query.q
     page = 0 if not request.query.page else int(request.query.page)
     limitby = (page * 1, (page + 1) * 2)
-    columns = db(Columna).select(limitby=limitby, orderby=Columna.numero)
+
+    if query:
+        columns = db(Columna.numero == int(query)).select()
+    else:
+        columns = db(Columna).select(limitby=limitby, orderby=Columna.numero)
+
+    if columns:
+        columns = columns[0]
 
     return dict(query=query, col=columns, page=page)
+
+
+@post('/form-relevamiento')
+def form_relevamiento():
+    return dict()
+
+
+@post('/form-lampara')
+def form_lampara():
+    return 'resultado'
 
 
 @route('/columna/add')
