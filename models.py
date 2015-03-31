@@ -38,16 +38,16 @@ Relevamiento = db.define_table('relevamiento',
                 Field('columna', Columna), 
                 Field('tipo_soporte', Soporte),
                 Field('color'),
-                Field('propio', 'boolean', default=True), # Propio=True, Ajeno=False
-                Field('aspecto'), # Despintada | Sucia | Otro
-                Field('estado'), # Excelente | Bueno | Malo
+                Field('propio', 'boolean', default=True),
+                Field('aspecto'),
+                Field('estado'),
                 Field('tapa_inspeccion', 'boolean'),
                 Field('puntos_luz', 'integer', default=0),
                 Field('imagen', 'upload'),
-                Field('invadida'), # Árbol | Cartel | Cable | Todo | Otros.
+                Field('invadida'),
                 Field('observacion_piquete'),
-                Field('tipo_alimentacion'), # Aerea | Subterranea
-                Field('sistema_encendido'), # E/E | Foto Célula.
+                Field('tipo_alimentacion'),
+                Field('sistema_encendido'),
                 Field('observacion_alimentacion', 'text'),
                 format='%(columna)s',
                 migrate='databases/Relevamiento.migrate'
@@ -56,8 +56,8 @@ Relevamiento = db.define_table('relevamiento',
 Lampara = db.define_table('lampara',
                 Field('relevamiento', Relevamiento),
                 Field('tipo'),
-                Field('estado', 'list:string'), # Excelente | Bueno | Malo
-                Field('modelo_artefacto', 'list:string'), # 
+                Field('estado', 'list:string'),
+                Field('modelo_artefacto', 'list:string'),
                 Field('potencia', 'integer'),
                 format='%(nombre)s: %(potencia)s W',
                 migrate='databases/Lampara.migrate')
