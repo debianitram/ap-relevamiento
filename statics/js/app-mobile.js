@@ -2,7 +2,7 @@
 var windowResizeHandler = function() {
     window_height = $(window).height();
     columns_view = $('#columns-view').height();
-    $('#down').height(window_height - columns_view - 50);
+    $('#down').height(window_height - columns_view - 150);
 }
 
 var ProcessLampara = function(){
@@ -15,14 +15,20 @@ var ProcessLampara = function(){
             data = {};
             FormLampara.serializeArray().map(function(x){data[x.name] = x.value;});
 
-            $.post('/form-lampara',
-                   data,
-                   function(result){
-                        // Success
-                        console.log(result);
-                        Modal.modal('hide');
-                   }
-            )
+            $.ajax({url: '/form-lampara', type: 'POST', data: data})
+            
+            .done(function(response, status, jqXHR){
+                Modal.modal('hide');
+                $('#ptos-luz').append(response);
+                $('#__error').remove();
+            })
+            
+            .fail(function (response, status, errorThrown){
+                $('#__error').remove(); 
+                FormLampara.prepend('<div id="__error" class="alert alert-danger">' 
+                                    + response['responseText'] + 
+                                    "</div>");
+            });
         }
     )
 }

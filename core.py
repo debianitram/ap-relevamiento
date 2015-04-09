@@ -1,3 +1,5 @@
+from gluino import SELECT, OPTION, TAG
+from models import OPCIONES
 
 def validate(Table, values):
     errors = {}
@@ -19,3 +21,11 @@ def validate(Table, values):
     if errors:
         return errors
 
+
+def select(value, opts):
+    options = OPCIONES.get(opts)
+    result = TAG[''](*[OPTION(item,
+                            _value=item.lower(),
+                            _selected=value.lower() == item.lower())
+                            for item in options])
+    return result

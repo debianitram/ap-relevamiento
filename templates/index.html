@@ -1,5 +1,6 @@
 {{extend 'templates/layout.html'}}
 
+
 <div class='row'>
     <div id='columns-view' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
         <div class='row-fluid'><!-- Form Search -->
@@ -29,7 +30,7 @@
                         <tbody>
                             <tr>
                                 <td><strong>Nº</strong></td>
-                                <td><span style='color:red'>{{=col['numero']}}</span></td>
+                                <td><span class='badge badge-default'>{{=col['numero']}}</span></td>
                                 <td><strong>Emplazamiento</strong></td>
                                 <td>{{=col['emplazamiento']}}</td>
                             </tr>
@@ -58,30 +59,45 @@
 </div>
 
 <div class='row' >
-    <div id='down' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'> <!-- Start Form Relevamiento -->
+    <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'> <!-- Start Form Relevamiento -->
         <div class="panel panel-default">
-            <div class="panel-heading">Relevamiento</div>
-            <div class="panel-body">
+            <div class="panel-heading">
+                <strong>Relevamiento</strong>
+            </div>
+            <div  id='down'  class="panel-body">
                 <form id='form-relevamiento' class="form-horizontal">
                     
                     <div class="form-group">
                         <label for="relevamiento_color" class="col-sm-2 control-label">Color</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id='relevamiento_color' name='color' placeholder="Color">
+                            <input type="hidden" class="form-control" id='relevamiento_columna' name='columna' value="{{=col['id']}}">
+                            <input type="string" class="form-control" id='relevamiento_color' name='color'>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="relevamiento_aspecto" class="col-sm-2 control-label">Aspecto</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id="relevamiento_aspecto" name='aspecto'>
+                            <select class="form-control" id="relevamiento_aspecto" name="aspecto">
+                                {{if relevamiento and relevamiento['aspecto']:}}
+                                    {{=fn_select(relevamiento.aspecto, 'aspecto')}}
+                                {{else:}}
+                                    {{=fn_select('', 'aspecto')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="relevamiento_tipo" class="col-sm-2 control-label">Tipo</label>
+                        <label for="relevamiento_tipo_soporte" class="col-sm-2 control-label">Tipo Soporte</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id='relevamiento_tipo' name='tipo_soporte'>
+                            <select class="form-control" id='relevamiento_tipo_soporte' name='tipo_soporte'>
+                                {{if relevamiento and relevamiento['tipo_soporte']:}}
+                                    {{=fn_select(relevamiento.tipo_soporte, 'tipo_columna')}}
+                                {{else:}}
+                                    {{=fn_select('', 'tipo_columna')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
                     
@@ -105,21 +121,43 @@
                     <div class="form-group">
                         <label for="relevamiento_estado" class="col-sm-2 control-label">Estado</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id="relevamiento_estado" name='estado'>
+                            <select class="form-control" id="relevamiento_estado" name='estado'>
+                                {{if relevamiento and relevamiento['estado']:}}
+                                    {{=fn_select(relevamiento.estado, 'estado')}}
+                                {{else:}}
+                                    {{=fn_select('', 'estado')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="relevamiento_invadida" class="col-sm-2 control-label">Invadida</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id="relevamiento_invadida" name='invadida'>
+                            <select class="form-control" id="relevamiento_invadida" name='invadida'>
+                                {{if relevamiento and relevamiento['invadida']:}}
+                                    {{=fn_select(relevamiento.invadida, 'invacion')}}
+                                {{else:}}
+                                    {{=fn_select('', 'invacion')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="relevamiento_lampara" class="col-sm-2 control-label">Lamparas</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-1">
                             <button id='add_lampara' type='button' class='btn btn-default btn-sm'>Agregar</button>
+                        </div>
+                        <div class='col-sm-7'>
+                            <ul id='ptos-luz' class="list-inline">
+                                {{if relevamiento:}}
+                                    {{for lampara in relevamiento.lampara.select():}}
+                                        <li><a href='#{{=lampara.id}}'><span class='glyphicon glyphicon-record'></span></a></li>
+                                    {{pass}}
+                                {{pass}}
+                            </ul>
+                            <input type='hidden' name='lamparas'>
                         </div>
                     </div>
 
@@ -140,14 +178,26 @@
                     <div class="form-group">
                         <label for="relevamiento_tipo_alimentacion" class="col-sm-2 control-label">Tipo Alimentación</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id="relevamiento_tipo_alimentacion" name='tipo_alimentacion'>
+                            <select class="form-control" id="relevamiento_tipo_alimentacion" name='tipo_alimentacion'>
+                                {{if relevamiento and relevamiento['tipo_alimentacion']:}}
+                                    {{=fn_select(relevamiento.tipo_alimentacion, 'alimentacion')}}
+                                {{else:}}
+                                    {{=fn_select('', 'alimentacion')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="relevamiento_sistema_encendido" class="col-sm-2 control-label">Sistema Encendido</label>
                         <div class="col-sm-10">
-                            <input type="string" class="form-control" id="relevamiento_sistema_encendido" name='sistema_encendido'>
+                            <select class="form-control" id="relevamiento_sistema_encendido" name='sistema_encendido'>
+                                {{if relevamiento and relevamiento['sistema_encendido']:}}
+                                    {{=fn_select(relevamiento.tipo_alimentacion, 'encendido')}}
+                                {{else:}}
+                                    {{=fn_select('', 'encendido')}}
+                                {{pass}}
+                            </select>
                         </div>
                     </div>
 
@@ -186,7 +236,9 @@
                     </div>
                     <div class="form-group">
                         <label for="lampara_estado" class="control-label">Estado</label>
-                        <input type="string" class="form-control" id="lampara_estado" name='estado'>
+                            <select class="form-control" id="lampara_estado" name='estado'>
+                                {{=fn_select('', 'estado')}}
+                            </select>
                     </div>
                     <div class="form-group">
                         <label for="lampara_modelo_artefacto" class="control-label">Modelo Artefacto</label>

@@ -1,7 +1,9 @@
 gluino/*
 databases/*
+tmp/
 *.py[co]
 !.gitignore
 *.log
 *.*~
 
+load_columns.py

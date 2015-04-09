@@ -6,10 +6,11 @@ import json
 
 from bottle import route, run, Bottle, ServerAdapter, HTTPResponse
 from bottle import request, response, get, post, static_file, redirect
-from gluino import wrapper, SPAN, A
+from gluino import wrapper, SPAN, A, LI
 
-from validate import validate
+from core import validate, select
 from models import db, Columna, Relevamiento, Lampara
+
 
 # Configure the gluino wrapper
 wrapper.debug = True
@@ -56,11 +57,15 @@ def index():
         if not column.relevamiento.isempty():
             relevamiento = column.relevamiento.select()[0]
 
-    return dict(query=query, page=page, col=column, relevamiento=relevamiento)
+    return dict(query=query,
+                page=page,
+                col=column,
+                relevamiento=relevamiento,
+                fn_select=select)
 
 
 
-@wrapper()
+
 def form_relevamiento():
     vars = wrapper.extract_vars(request.forms)
     return json.dumps(vars)
@@ -73,13 +78,17 @@ def form_lampara():
     
     if not eval_values:
         lampara = Lampara.insert(**values)
-        luz = A(SPAN(_class='glyphicon glyphicon-record'),
-                _href='#%s' % lampara.id)
+        luz = LI(A(SPAN(_class='glyphicon glyphicon-record'),
+                 _href='#%s' % lampara.id))
+        
         db.commit()
+        
         return HTTPResponse(luz.xml(), 200)
     
     else:
         return HTTPResponse(json.dumps(eval_values), 500)
+
+
 
 
 @route('/statics/<filepath:path>')
