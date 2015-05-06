@@ -3,25 +3,21 @@
 from gluino import DAL, Field
 from gluino import IS_NOT_EMPTY, IS_EMPTY_OR, IS_IN_DB
 
-db = DAL('sqlite://databases/storage.db')
+db = DAL('sqlite://databases/storage.db', pool_size=1)
 
-ASPECTO = ('', 'Despintada', 'Sucia', 'Otro')
+
 ESTADO = ('', 'Excelente', 'Bueno', 'Malo')
-INVACION = ('', 'Árbol', 'Cartel', 'Cable', 'Todo')
-ALIMENTACION = ('', 'Aerea', 'Subterranea')
-ENCENDIDO = ('', 'E/E', 'Foto Célula')
-TIPO_COLUMNA = ('', 'Poste', 'Hormigon', 'Hierro')
+ACOMETIDA = ('', 'Aerea', 'Subterranea')
+SOSTEN = ('', 'Columna', 'Madera', 'HA')
+PUESTA_TIERRA = ('', 'Si', 'No', 'Discontinua')
 
-OPCIONES = {'aspecto': ASPECTO,
-            'estado': ESTADO,
-            'invacion': INVACION,
-            'alimentacion': ALIMENTACION,
-            'encendido': ENCENDIDO,
-            'tipo_columna': TIPO_COLUMNA}
+OPCIONES = {'estado': ESTADO,
+            'acometida': ACOMETIDA,
+            'sosten': SOSTEN,
+            'pt': PUESTA_TIERRA}
 
-mg = True
 
-Columna = db.define_table('Columna',
+Columna = db.define_table('columna',
                 Field('numero', length=50, requires=IS_NOT_EMPTY()),
                 Field('lat', 'float'),
                 Field('lng', 'float'),
@@ -35,37 +31,41 @@ Columna = db.define_table('Columna',
                 Field('altura'),
                 Field('orden', 'integer'),
                 format='%(numero)s',
-                migrate='databases/Columna.migrate' if mg else False,
+                migrate='databases/Columna.migrate',
                 )
 
 
 Relevamiento = db.define_table('relevamiento',
                 Field('columna', Columna), 
-                Field('tipo_soporte', requires=IS_NOT_EMPTY()),
-                Field('color'),
-                Field('propio', 'boolean', default=True),
-                Field('aspecto', requires=IS_NOT_EMPTY()),
-                Field('estado', requires=IS_NOT_EMPTY()),
-                Field('tapa_inspeccion', 'boolean'),
+                Field('sosten', requires=IS_NOT_EMPTY()),
+                Field('color', 'string', length=50),
+                Field('base_oxido', 'boolean'),
+                Field('base_sello', 'boolean'),
+                Field('base_madera', 'string', length=50),
+                Field('boca_inspeccion', 'boolean'),
+                Field('sujecion_brazo', 'string', length=20),
+                Field('acometida', 'string', length=250),
+                Field('puesta_tierra', 'string', length=50),
                 Field('puntos_luz', 'integer', default=0),
                 Field('imagen', 'upload'),
-                Field('invadida', requires=IS_NOT_EMPTY()),
                 Field('observacion_piquete'),
-                Field('tipo_alimentacion', requires=IS_NOT_EMPTY()),
-                Field('sistema_encendido', requires=IS_NOT_EMPTY()),
-                Field('observacion_alimentacion', 'text'),
+                Field('observacion_sosten', 'text'),
+                Field('observacion_luminaria', 'text'),
                 format='%(columna)s',
-                migrate='databases/Relevamiento.migrate' if mg else False,
+                migrate='databases/Relevamiento.migrate',
                 )
 
-Lampara = db.define_table('lampara',
+
+Lampara = db.define_table('luminaria',
                 Field('relevamiento',
                       Relevamiento,
                       requires=IS_EMPTY_OR(IS_IN_DB(db, Relevamiento))),
-                Field('tipo'),
+                Field('tipo', 'string', length=200),
                 Field('estado', requires=IS_NOT_EMPTY()),
                 Field('modelo_artefacto'),
                 Field('potencia', 'integer', requires=IS_NOT_EMPTY()),
+                Field('tulipa', 'string'),
+                Field('proteccion', 'string', length=50),
                 format='%(id)s: %(potencia)s W',
-                migrate='databases/Lampara.migrate' if mg else False,
+                migrate='databases/Lampara.migrate',
                 )

@@ -53,14 +53,61 @@ var ProcessRelevamiento = function(){
     );
 }
 
+
+var InfoExtra = function(){
+    Sosten = $('#relevamiento_sosten');
+
+    Sosten.on('change', function(e){
+        
+        $('.extras').find('input, input:checkbox, select').each(
+            // reset value of widgets.
+            function(pos, elem){
+                if (elem.type == 'text') || (elem.type == 'select-one'){
+                    elem.value = '';
+                }
+                if (elem.type == 'checkbox'){
+                    elem.checked = false;
+                }
+            }
+        );
+
+        if (Sosten.val() == 'columna'){
+            $('#madera-extra').hide();
+            $('#sujecion-extra').hide();
+            $('#columna-extra').show();
+        }
+
+        else if (Sosten.val() == 'madera'){
+            $('#madera-extra').show();
+            $('#sujecion-extra').show();
+            $('#columna-extra').hide();
+        }
+
+        else if (Sosten.val() == 'ha') {
+            $('#sujecion-extra').show();
+            $('#madera-extra').hide();
+            $('#columna-extra').hide();
+        }
+
+        else {
+            $('#columna-extra').hide();
+            $('#madera-extra').hide();
+            $('#sujecion-extra').hide();
+        }
+    });
+}
+
+
 var Init = function(){
     windowResizeHandler();
     $('#add_lampara').on('click',
         function(){
             Modal.modal('show');
     });
+
     ProcessLampara();
     ProcessRelevamiento();
+    InfoExtra();
 }
 
 // Resize maps where resize window.

@@ -103,7 +103,7 @@ app.route('/form-relevamiento', method='POST')(form_relevamiento)
 app.route('/statics/<filepath:path>', method='GET')(server_static)
 
 try:
-    server = MyWSGIRefServer(host='127.0.0.1', port='8080')
+    server = MyWSGIRefServer(host='0.0.0.0', port='8080')
     app.run(server=server, reloader=True)
 except Exception, ex:
     print('Exception: %s' % repr(ex))

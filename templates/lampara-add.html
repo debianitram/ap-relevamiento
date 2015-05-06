@@ -1,0 +1,41 @@
+<!-- Begin Modal Add Lamparas -->
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Nueva Lámpara</h4>
+            </div>
+            <div class="modal-body">
+                <form id='form-lampara'>
+                    <div class="form-group">
+                        <label for="lampara_tipo" class="control-label">Tipo</label>
+                        <input type="string" class="form-control" id="lampara_tipo" name='tipo'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_estado" class="control-label">Estado</label>
+                            <select class="form-control" id="lampara_estado" name='estado'>
+                                {{=fn_select('', 'estado')}}
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_modelo_artefacto" class="control-label">Modelo Artefacto</label>
+                        <input type="string" class="form-control" id="lampara_modelo_artefacto" name='modelo_artefacto'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_potencia" class="control-label">Potencia</label>
+                        <input type="number" class="form-control" id="lampara_potencia" name='potencia'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_proteccion" class="control-label">Protección</label>
+                        <input type="number" class="form-control" id="lampara_proteccion" name='proteccion'>
+                    </div>
+                    <div class='form-group'>
+                        <button type='submit' class='btn btn-primary btn-sm'> Guardar </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

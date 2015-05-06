@@ -2,7 +2,7 @@
 
 
 <div class='row'>
-    <div id='columns-view' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+    <div id='columns-view' class='col-xs-12'>
         <div class='row-fluid'><!-- Form Search -->
             <form action='.' method='get'>
                 <div class="input-group">
@@ -29,15 +29,15 @@
                     <table class='table table-condensed table-bordered'>
                         <tbody>
                             <tr>
-                                <td><strong>Nº</strong></td>
+                                <td width="10%"><strong>Nº</strong></td>
                                 <td><span class='badge badge-default'>{{=col['numero']}}</span></td>
-                                <td><strong>Emplazamiento</strong></td>
+                                <td width="10%"><strong>Emplazamiento</strong></td>
                                 <td>{{=col['emplazamiento']}}</td>
                             </tr>
                             <tr>
                                 <td><strong>Orientación</strong></td>
-                                <td>{{='Horizonal' if col['grupo'] == 'h' else 'Vertical'}}</td>
-                                <td><strong>Altura</strong></td>
+                                <td>{{='ESTE/OESTE' if col['grupo'] == 'h' else 'NORTE/SUR'}}</td>
+                                <td><strong>Numeración</strong></td>
                                 <td>{{=col['altura']}}</td>
                             </tr>
                             <tr>
@@ -55,101 +55,136 @@
             </div>
         </div>
     </div>
-
 </div>
 
-<div class='row' >
-    <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'> <!-- Start Form Relevamiento -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+<div class='row'>
+    <div class='col-xs-12'>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
                 <strong>Relevamiento</strong>
             </div>
-            <div  id='down'  class="panel-body">
-                <form id='form-relevamiento' class="form-horizontal">
-                    
+            <div id='down' class='panel-body'>
+
+                <form id='form-relevamiento' class='form-horizontal'>
+
+                    <input type="hidden" class="form-control" id='relevamiento_columna' name='columna' value="{{=col['id']}}">
+
                     <div class="form-group">
-                        <label for="relevamiento_color" class="col-sm-2 control-label">Color</label>
-                        <div class="col-sm-10">
-                            <input type="hidden" class="form-control" id='relevamiento_columna' name='columna' value="{{=col['id']}}">
-                            <input type="string" class="form-control" id='relevamiento_color' name='color'>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="relevamiento_aspecto" class="col-sm-2 control-label">Aspecto</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="relevamiento_aspecto" name="aspecto">
-                                {{if relevamiento and relevamiento['aspecto']:}}
-                                    {{=fn_select(relevamiento.aspecto, 'aspecto')}}
+                        <label for="relevamiento_sosten" class="col-xs-2 control-label">Elemento de Sostén</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" id="relevamiento_sosten" name="sosten">
+                                {{if relevamiento and relevamiento['sosten']:}}
+                                    {{=fn_select(relevamiento.sosten, 'sosten')}}
                                 {{else:}}
-                                    {{=fn_select('', 'aspecto')}}
+                                    {{=fn_select('', 'sosten')}}
                                 {{pass}}
                             </select>
                         </div>
                     </div>
-                    
+
+                    <div class='extras'>
+                        <div id="columna-extra" style='display:none'>
+                            <div class="well">
+                                <div class="form-group">
+                                    <label for="relevamiento_color" class="col-xs-2 control-label">Color</label>
+                                    <div class="col-xs-10">
+                                        <input type="string" class="form-control" id='relevamiento_color' name='color'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="relevamiento_base_oxido" class="col-xs-2 control-label">Estado de base</label>
+                                    <div class="col-xs-3">
+                                        <span>
+                                            <input type="checkbox" id="relevamiento_base_oxido" name='base_oxido'>
+                                            <i>La base se encuentra oxidada?</i>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>
+                                            <input type="checkbox" id="relevamiento_base_sello" name='base_sello'>
+                                            <i>La base tiene sello?</i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="relevamiento_boca_inspeccion" class="col-xs-2 control-label">Tapa inspección</label>
+                                    <div class="col-xs-3">
+                                        <span>
+                                            <input type="checkbox" id="relevamiento_boca_inspeccion" name='boca_inspeccion'>
+                                            <i>Tiene boca de inspección?</i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="sujecion-extra" style='display:none'>
+                            <div class='well'>
+                                <div class="form-group">
+                                    <label for="relevamiento_sujecion_brazo" class="col-xs-2 control-label">Sujeción Brazo</label>
+                                    <div class="col-xs-10">
+                                        <select class="form-control" id="relevamiento_sujecion_brazo" name="sujecion_brazo">
+                                            {{if relevamiento and relevamiento['sujecion_brazo']:}}
+                                                {{=fn_select(relevamiento.sujecion_brazo, 'estado')}}
+                                            {{else:}}
+                                                {{=fn_select('', 'estado')}}
+                                            {{pass}}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="madera-extra" style="display:none">
+                                    <div class="form-group">
+                                        <label for="relevamiento_base_madera" class="col-xs-2 control-label">Estado de base</label>
+                                        <div class="col-xs-10">
+                                            <select class="form-control" id="relevamiento_base_madera" name="base_madera">
+                                                {{if relevamiento and relevamiento['base_madera']:}}
+                                                    {{=fn_select(relevamiento.base_madera, 'estado')}}
+                                                {{else:}}
+                                                    {{=fn_select('', 'estado')}}
+                                                {{pass}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="relevamiento_tipo_soporte" class="col-sm-2 control-label">Tipo Soporte</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id='relevamiento_tipo_soporte' name='tipo_soporte'>
-                                {{if relevamiento and relevamiento['tipo_soporte']:}}
-                                    {{=fn_select(relevamiento.tipo_soporte, 'tipo_columna')}}
+                        <label for="relevamiento_acometida" class="col-xs-2 control-label">Acometida</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" id="relevamiento_acometida" name="acometida">
+                                {{if relevamiento and relevamiento['acometida']:}}
+                                    {{=fn_select(relevamiento.acometida, 'acometida')}}
                                 {{else:}}
-                                    {{=fn_select('', 'tipo_columna')}}
-                                {{pass}}
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="relevamiento_propio" class="col-sm-2 control-label">Propio</label>
-                        <div class="col-sm-10">
-                            <input type="checkbox" class="checkbox custom-checkbox" id="relevamiento_propio" name='propio'>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="relevamiento_tapa_inspeccion" class="col-sm-2 control-label">Tapa</label>
-                        <div class="col-sm-10">
-                            <span>
-                                <input type="checkbox" id="relevamiento_tapa_inspeccion" name='tapa_inspeccion'>
-                                <i>Tapa de Inspección</i>
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="relevamiento_estado" class="col-sm-2 control-label">Estado</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="relevamiento_estado" name='estado'>
-                                {{if relevamiento and relevamiento['estado']:}}
-                                    {{=fn_select(relevamiento.estado, 'estado')}}
-                                {{else:}}
-                                    {{=fn_select('', 'estado')}}
-                                {{pass}}
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="relevamiento_invadida" class="col-sm-2 control-label">Invadida</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="relevamiento_invadida" name='invadida'>
-                                {{if relevamiento and relevamiento['invadida']:}}
-                                    {{=fn_select(relevamiento.invadida, 'invacion')}}
-                                {{else:}}
-                                    {{=fn_select('', 'invacion')}}
+                                    {{=fn_select('', 'acometida')}}
                                 {{pass}}
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_lampara" class="col-sm-2 control-label">Lamparas</label>
-                        <div class="col-sm-1">
+                        <label for="relevamiento_puesta_tierra" class="col-xs-2 control-label">Puesta a Tierra</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" id="relevamiento_puesta_tierra" name="puesta_tierra">
+                                {{if relevamiento and relevamiento['puesta_tierra']:}}
+                                    {{=fn_select(relevamiento.puesta_tierra, 'pt')}}
+                                {{else:}}
+                                    {{=fn_select('', 'pt')}}
+                                {{pass}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="relevamiento_lampara" class="col-xs-2 control-label">Lamparas</label>
+                        <div class="col-xs-1">
                             <button id='add_lampara' type='button' class='btn btn-default btn-sm'>Agregar</button>
                         </div>
-                        <div class='col-sm-7'>
+                        <div class='col-xs-7'>
                             <ul id='ptos-luz' class="list-inline">
                                 {{if relevamiento:}}
                                     {{for lampara in relevamiento.lampara.select():}}
@@ -162,98 +197,35 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_imagen" class="col-sm-2 control-label">Imagen</label>
-                        <div class="col-sm-10">
+                        <label for="relevamiento_imagen" class="col-xs-2 control-label">Imagen</label>
+                        <div class="col-xs-10">
                             <input type="file" accept="image/*" capture="camera" id="relevamiento_imagen" name='imagen'>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_observacion" class="col-sm-2 control-label">Observación Columna</label>
-                        <div class="col-sm-10">
-                            <textarea type="text" class="form-control" id="relevamiento_observacion" name='observacion'> </textarea>
+                        <label for="relevamiento_observacion_sosten" class="col-xs-2 control-label">Observación Sosten</label>
+                        <div class="col-xs-10">
+                            <textarea type="text" class="form-control" id="relevamiento_observacion_sosten" name='observacion'> </textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_tipo_alimentacion" class="col-sm-2 control-label">Tipo Alimentación</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="relevamiento_tipo_alimentacion" name='tipo_alimentacion'>
-                                {{if relevamiento and relevamiento['tipo_alimentacion']:}}
-                                    {{=fn_select(relevamiento.tipo_alimentacion, 'alimentacion')}}
-                                {{else:}}
-                                    {{=fn_select('', 'alimentacion')}}
-                                {{pass}}
-                            </select>
+                        <label for="relevamiento_observacion_luminaria" class="col-xs-2 control-label">Observación Luminaria</label>
+                        <div class="col-xs-10">
+                            <textarea type="text" class="form-control" id="relevamiento_observacion_luminaria" name='observacion'> </textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_sistema_encendido" class="col-sm-2 control-label">Sistema Encendido</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="relevamiento_sistema_encendido" name='sistema_encendido'>
-                                {{if relevamiento and relevamiento['sistema_encendido']:}}
-                                    {{=fn_select(relevamiento.tipo_alimentacion, 'encendido')}}
-                                {{else:}}
-                                    {{=fn_select('', 'encendido')}}
-                                {{pass}}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="relevamiento_observacion_alimentacion" class="col-sm-2 control-label">Observación Alimentación</label>
-                        <div class="col-sm-10">
-                            <textarea type="text" class="form-control" id="relevamiento_alimentacion" name='observacion_alimentacion'> </textarea>
-                        </div>
-                    </div>
-
-                    
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                        <div class="col-xs-offset-2 col-xs-10">
                             <button type='submit' class='btn btn-primary btn-sm'> Guardar </button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-    </div> <!-- End Form Relevamiento -->    
-</div> 
+    </div>
+</div>
 
-<!-- Begin Modal Add Lamparas -->
-<div class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Nueva Lámpara</h4>
-            </div>
-            <div class="modal-body">
-                <form id='form-lampara'>
-                    <div class="form-group">
-                        <label for="lampara_tipo" class="control-label">Tipo</label>
-                        <input type="string" class="form-control" id="lampara_tipo" name='tipo'>
-                    </div>
-                    <div class="form-group">
-                        <label for="lampara_estado" class="control-label">Estado</label>
-                            <select class="form-control" id="lampara_estado" name='estado'>
-                                {{=fn_select('', 'estado')}}
-                            </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="lampara_modelo_artefacto" class="control-label">Modelo Artefacto</label>
-                        <input type="string" class="form-control" id="lampara_modelo_artefacto" name='modelo_artefacto'>
-                    </div>
-                    <div class="form-group">
-                        <label for="lampara_potencia" class="control-label">Potencia</label>
-                        <input type="number" class="form-control" id="lampara_potencia" name='potencia'>
-                    </div>
-                    <div class='form-group'>
-                        <button type='submit' class='btn btn-primary btn-sm'> Guardar </button>
-                    </div>
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!-- End Modal -->
+{{include 'templates/lampara-add.html'}}
