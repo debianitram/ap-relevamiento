@@ -10,11 +10,20 @@ ESTADO = ('', 'Excelente', 'Bueno', 'Malo')
 ACOMETIDA = ('', 'Aerea', 'Subterranea')
 SOSTEN = ('', 'Columna', 'Madera', 'HA')
 PUESTA_TIERRA = ('', 'Si', 'No', 'Discontinua')
+TIPO_LAMPARA = ('',
+                'SAP 100',
+                'SAP 150',
+                'SAP 550',
+                'SAP 400',
+                'ML E27',
+                'ML E40',)
+
 
 OPCIONES = {'estado': ESTADO,
             'acometida': ACOMETIDA,
             'sosten': SOSTEN,
-            'pt': PUESTA_TIERRA}
+            'pt': PUESTA_TIERRA,
+            'tp_lampara': TIPO_LAMPARA}
 
 
 Columna = db.define_table('columna',
@@ -47,8 +56,9 @@ Relevamiento = db.define_table('relevamiento',
                 Field('acometida', 'string', length=250),
                 Field('puesta_tierra', 'string', length=50),
                 Field('puntos_luz', 'integer', default=0),
-                Field('imagen', 'upload'),
-                Field('observacion_piquete'),
+                Field('imagen1', 'string', length=250),
+                Field('imagen2', 'string', length=250),
+                Field('imagen3', 'string', length=250),
                 Field('observacion_sosten', 'text'),
                 Field('observacion_luminaria', 'text'),
                 format='%(columna)s',
@@ -57,15 +67,16 @@ Relevamiento = db.define_table('relevamiento',
 
 
 Lampara = db.define_table('luminaria',
-                Field('relevamiento',
-                      Relevamiento,
-                      requires=IS_EMPTY_OR(IS_IN_DB(db, Relevamiento))),
+                Field('columna',
+                      Columna,
+                      requires=IS_EMPTY_OR(IS_IN_DB(db, Columna))),
                 Field('tipo', 'string', length=200),
                 Field('estado', requires=IS_NOT_EMPTY()),
                 Field('modelo_artefacto'),
-                Field('potencia', 'integer', requires=IS_NOT_EMPTY()),
-                Field('tulipa', 'string'),
-                Field('proteccion', 'string', length=50),
+                Field('proteccion', 'boolean', default=True),
                 format='%(id)s: %(potencia)s W',
                 migrate='databases/Lampara.migrate',
                 )
+
+
+index_aux = [i.numero for i in db(Columna).select(orderby=Columna.numero)]

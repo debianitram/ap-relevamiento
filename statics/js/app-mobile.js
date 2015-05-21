@@ -14,6 +14,7 @@ var ProcessLampara = function(){
             event.preventDefault();
             data = {};
             FormLampara.serializeArray().map(function(x){data[x.name] = x.value;});
+            console.log(data);
 
             $.ajax({url: '/form-lampara', type: 'POST', data: data})
             
@@ -33,27 +34,46 @@ var ProcessLampara = function(){
     )
 }
 
-var ProcessRelevamiento = function(){
-    FormRelevamiento = $('#form-relevamiento');
 
-    FormRelevamiento.on('submit',
-        function(event){
-            event.preventDefault();
-            data = {};
-            FormRelevamiento.serializeArray().map(function(x){data[x.name] = x.value;});
+var initInfoExtra = function(){
+    Sosten = $('#relevamiento_sosten') ;
 
-            $.post('/form-relevamiento',
-                   data,
-                   function(result){
-                        // Success
-                        console.log(result);
-                   }
-            )
-        }
-    );
+    if (Sosten.val() == 'columna'){
+        $('#columna-extra').show();
+    }
+    else if (Sosten.val() == 'madera'){
+        $('#madera-extra').show();
+        $('#sujecion-extra').show();
+    }
+    else if (Sosten.val() == 'ha'){
+        $('#sujecion-extra').show();
+    }
 }
 
+var RemoveItem = function(){
+    $(document).on('click', '.remove-item',
+    function(event){
+        Item = $(event.currentTarget).parent('li')[0];
+        if (!Item){
+            Item = $(event.currentTarget).parents('tr')[0];
+        }
 
+        target = Item.dataset.target;
+
+        if (Item.dataset.db == 'true'){
+            $.get("/delete_item",
+                {'target': target},
+                function(data){
+                    console.log(data);
+                    $(Item).slideToggle();
+                }
+            );
+        } else {
+            $(Item).remove();  // Sin impacto en db.
+        }
+    }
+);
+}
 var InfoExtra = function(){
     Sosten = $('#relevamiento_sosten');
 
@@ -62,7 +82,7 @@ var InfoExtra = function(){
         $('.extras').find('input, input:checkbox, select').each(
             // reset value of widgets.
             function(pos, elem){
-                if (elem.type == 'text') || (elem.type == 'select-one'){
+                if ((elem.type == 'text') || (elem.type == 'select-one')){
                     elem.value = '';
                 }
                 if (elem.type == 'checkbox'){
@@ -104,9 +124,9 @@ var Init = function(){
         function(){
             Modal.modal('show');
     });
-
+    RemoveItem();
     ProcessLampara();
-    ProcessRelevamiento();
+    initInfoExtra();
     InfoExtra();
 }
 

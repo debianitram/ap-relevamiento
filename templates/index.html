@@ -30,7 +30,7 @@
                         <tbody>
                             <tr>
                                 <td width="10%"><strong>Nº</strong></td>
-                                <td><span class='badge badge-default'>{{=col['numero']}}</span></td>
+                                <td><span class='label label-danger'>{{=col['numero']}}</span></td>
                                 <td width="10%"><strong>Emplazamiento</strong></td>
                                 <td>{{=col['emplazamiento']}}</td>
                             </tr>
@@ -62,12 +62,18 @@
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <strong>Relevamiento</strong>
+                <div class='pull-right'>
+                    <span class="badge label-success">
+                        {{='Actualización' if relevamiento else 'Nuevo'}}
+                    </span>
+                </div>
             </div>
             <div id='down' class='panel-body'>
 
-                <form id='form-relevamiento' class='form-horizontal'>
-
-                    <input type="hidden" class="form-control" id='relevamiento_columna' name='columna' value="{{=col['id']}}">
+                <form id='form-relevamiento' class='form-horizontal' action='/form-relevamiento' method='POST' enctype="multipart/form-data">
+                <input type='hidden' name='page' value='{{=page}}'>  <!-- Página de Retorno Post Process Forms -->
+                    <input type="hidden" id='relevamiento_columna' name='columna' value="{{=col['id']}}">
+                    <input type="hidden" id='relevamiento_id' name='relevamiento_id' value="{{=relevamiento.id if relevamiento else 0}}">
 
                     <div class="form-group">
                         <label for="relevamiento_sosten" class="col-xs-2 control-label">Elemento de Sostén</label>
@@ -88,7 +94,7 @@
                                 <div class="form-group">
                                     <label for="relevamiento_color" class="col-xs-2 control-label">Color</label>
                                     <div class="col-xs-10">
-                                        <input type="string" class="form-control" id='relevamiento_color' name='color'>
+                                        <input type="string" class="form-control" id='relevamiento_color' name='color' value="{{=relevamiento.color if relevamiento else ''}}">
                                     </div>
                                 </div>
                                 
@@ -96,13 +102,15 @@
                                     <label for="relevamiento_base_oxido" class="col-xs-2 control-label">Estado de base</label>
                                     <div class="col-xs-3">
                                         <span>
-                                            <input type="checkbox" id="relevamiento_base_oxido" name='base_oxido'>
+                                            <input type="checkbox" id="relevamiento_base_oxido" 
+                                            name='base_oxido' {{='checked' if relevamiento and relevamiento.base_oxido else ''}}>
                                             <i>La base se encuentra oxidada?</i>
+                                            
                                         </span>
                                     </div>
                                     <div class="col-xs-3">
                                         <span>
-                                            <input type="checkbox" id="relevamiento_base_sello" name='base_sello'>
+                                            <input type="checkbox" id="relevamiento_base_sello" name='base_sello' {{='checked' if relevamiento and relevamiento.base_sello else ''}}>
                                             <i>La base tiene sello?</i>
                                         </span>
                                     </div>
@@ -112,7 +120,7 @@
                                     <label for="relevamiento_boca_inspeccion" class="col-xs-2 control-label">Tapa inspección</label>
                                     <div class="col-xs-3">
                                         <span>
-                                            <input type="checkbox" id="relevamiento_boca_inspeccion" name='boca_inspeccion'>
+                                            <input type="checkbox" id="relevamiento_boca_inspeccion" name='boca_inspeccion' {{='checked' if relevamiento and relevamiento.boca_inspeccion else ''}}>
                                             <i>Tiene boca de inspección?</i>
                                         </span>
                                     </div>
@@ -184,36 +192,56 @@
                         <div class="col-xs-1">
                             <button id='add_lampara' type='button' class='btn btn-default btn-sm'>Agregar</button>
                         </div>
-                        <div class='col-xs-7'>
-                            <ul id='ptos-luz' class="list-inline">
-                                {{if relevamiento:}}
-                                    {{for lampara in relevamiento.lampara.select():}}
-                                        <li><a href='#{{=lampara.id}}'><span class='glyphicon glyphicon-record'></span></a></li>
+                        <div class='col-xs-8 col-xs-offset-2'>
+                            <ul id='ptos-luz' class="list-group">
+                                {{if col:}}
+                                    {{for luminaria in col.luminaria.select():}}
+                                        <li class='list-group-item' data-target='luminaria-{{=luminaria.id}}' data-db='true'>
+                                            <span class='glyphicon glyphicon-plus'></span>
+                                            Tipo: {{=luminaria.tipo}} |
+                                            Estado: {{=luminaria.estado}} |
+                                            Protencción: {{=luminaria.proteccion}}
+                                            <a class='btn btn-xs btn-danger remove-item'>eliminar</a>
+                                        </li>
                                     {{pass}}
                                 {{pass}}
                             </ul>
-                            <input type='hidden' name='lamparas'>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="relevamiento_imagen" class="col-xs-2 control-label">Imagen</label>
-                        <div class="col-xs-10">
-                            <input type="file" accept="image/*" capture="camera" id="relevamiento_imagen" name='imagen'>
+                        <div class="col-xs-3">
+                            <input type="file" capture="camera" id="relevamiento_imagen1" name='imagen1'>
+                            {{if relevamiento and relevamiento.imagen1:}}
+                                <img src='../upload/{{=relevamiento.imagen1}}' width="40%" height="40%" />
+                            {{pass}}
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="file" capture="camera" id="relevamiento_imagen2" name='imagen2'>
+                            {{if relevamiento and relevamiento.imagen2:}}
+                                <img src='../upload/{{=relevamiento.imagen2}}' width="40%" height="40%" />
+                            {{pass}}
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="file" capture="camera" id="relevamiento_imagen3" name='imagen3'>
+                            {{if relevamiento and relevamiento.imagen3:}}
+                                <img src='../upload/{{=relevamiento.imagen3}}' width="40%" height="40%" />
+                            {{pass}}
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="relevamiento_observacion_sosten" class="col-xs-2 control-label">Observación Sosten</label>
                         <div class="col-xs-10">
-                            <textarea type="text" class="form-control" id="relevamiento_observacion_sosten" name='observacion'> </textarea>
+                            <textarea type="text" class="form-control" id="relevamiento_observacion_sosten" name='observacion_sosten'>{{=relevamiento.observacion_sosten.strip() if relevamiento else ''}}</textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="relevamiento_observacion_luminaria" class="col-xs-2 control-label">Observación Luminaria</label>
                         <div class="col-xs-10">
-                            <textarea type="text" class="form-control" id="relevamiento_observacion_luminaria" name='observacion'> </textarea>
+                            <textarea type="text" class="form-control" id="relevamiento_observacion_luminaria" name='observacion_luminaria'>{{=relevamiento.observacion_luminaria.strip() if relevamiento else ''}}</textarea>
                         </div>
                     </div>
 

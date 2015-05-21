@@ -1,6 +1,7 @@
 gluino/*
 databases/*
 tmp/
+upload/*
 *.py[co]
 !.gitignore
 *.log
