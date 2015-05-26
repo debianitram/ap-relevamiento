@@ -7,7 +7,9 @@ import json
 
 from bottle import route, run, Bottle, ServerAdapter, HTTPResponse
 from bottle import request, response, get, post, static_file, redirect
-from gluino import wrapper, SPAN, A, LI, INPUT
+
+from wrapper import wrapper
+from gluon import SPAN, A, LI, INPUT
 
 from core import validate, select
 from models import db, Columna, Relevamiento, Lampara, index_aux
@@ -77,7 +79,13 @@ def form_relevamiento():
               request.files.get('imagen2'),
               request.files.get('imagen3')]
 
+    for k in range(1, 4):
+        key = 'imagen%s' % k
+        if vars.has_key(key):
+            vars.pop(key)
+
     relevamiento_id = vars.pop('relevamiento_id')
+
     relevamiento = Relevamiento.update_or_insert(
         Relevamiento.id == relevamiento_id, **vars)
 
@@ -86,17 +94,21 @@ def form_relevamiento():
         r = Relevamiento(relevamiento.id if relevamiento else relevamiento_id)
         expression = {}
         
-        for count, i in enumerate(images):
+        for count, image in enumerate(images):
+            
+            if not image:
+                continue
             
             count += 1
+            key = 'imagen%s' % count
             name_image = '%s_%s.jpg' % (md5.new(str(r.id)).hexdigest(), count)
             
-            expression.update(**{'image%s' % count, name_image})
+            expression.update({key: name_image})
 
-            im = imagen.save('upload/%s' % name_image,
+            im = image.save('upload/%s' % name_image,
                              overwrite=True,
                              chunk_size=100000)
-            
+
         r.update_record(**expression)
 
     db.commit()
@@ -114,12 +126,12 @@ def form_lampara():
                  ' Tipo: %s | Estado: %s | Proteccion: %s' % (
                                                             lampara.tipo,
                                                             lampara.estado,
-                                                            lampara.proteccion),
-                 A('eliminar', _class='btn btn-xs btn-danger remove-item'),
+                                                            lampara.recambio_tulipa),
+                 A(SPAN(_class='glyphicon glyphicon-remove'),
+                   _class='btn btn-xs btn-danger remove-item'),
                 _class='list-group-item',
                 **{'_data-target': 'luminaria-%s' % lampara.id,
                    '_data-db': 'true'})
-        
         db.commit()
         
         return HTTPResponse(luz.xml(), 200)

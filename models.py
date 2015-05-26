@@ -1,7 +1,7 @@
 #!-*- encoding:utf-8 -*-
 
-from gluino import DAL, Field
-from gluino import IS_NOT_EMPTY, IS_EMPTY_OR, IS_IN_DB
+from gluon import DAL, Field
+from gluon import IS_NOT_EMPTY, IS_EMPTY_OR, IS_IN_DB
 
 db = DAL('sqlite://databases/storage.db', pool_size=1)
 
@@ -13,7 +13,7 @@ PUESTA_TIERRA = ('', 'Si', 'No', 'Discontinua')
 TIPO_LAMPARA = ('',
                 'SAP 100',
                 'SAP 150',
-                'SAP 550',
+                'SAP 250',
                 'SAP 400',
                 'ML E27',
                 'ML E40',)
@@ -27,7 +27,7 @@ OPCIONES = {'estado': ESTADO,
 
 
 Columna = db.define_table('columna',
-                Field('numero', length=50, requires=IS_NOT_EMPTY()),
+                Field('numero', 'integer', requires=IS_NOT_EMPTY()),
                 Field('lat', 'float'),
                 Field('lng', 'float'),
                 Field('fecha_registro', 'datetime'),
@@ -73,7 +73,7 @@ Lampara = db.define_table('luminaria',
                 Field('tipo', 'string', length=200),
                 Field('estado', requires=IS_NOT_EMPTY()),
                 Field('modelo_artefacto'),
-                Field('proteccion', 'boolean', default=True),
+                Field('recambio_tulipa', 'boolean', default=True),
                 format='%(id)s: %(potencia)s W',
                 migrate='databases/Lampara.migrate',
                 )

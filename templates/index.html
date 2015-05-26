@@ -121,7 +121,7 @@
                                     <div class="col-xs-3">
                                         <span>
                                             <input type="checkbox" id="relevamiento_boca_inspeccion" name='boca_inspeccion' {{='checked' if relevamiento and relevamiento.boca_inspeccion else ''}}>
-                                            <i>Tiene boca de inspección?</i>
+                                            <i>Posee tapa?</i>
                                         </span>
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="relevamiento_lampara" class="col-xs-2 control-label">Lamparas</label>
+                        <label for="relevamiento_lampara" class="col-xs-2 control-label">Luminarias</label>
                         <div class="col-xs-1">
                             <button id='add_lampara' type='button' class='btn btn-default btn-sm'>Agregar</button>
                         </div>
@@ -200,8 +200,10 @@
                                             <span class='glyphicon glyphicon-plus'></span>
                                             Tipo: {{=luminaria.tipo}} |
                                             Estado: {{=luminaria.estado}} |
-                                            Protencción: {{=luminaria.proteccion}}
-                                            <a class='btn btn-xs btn-danger remove-item'>eliminar</a>
+                                            Protencción: {{=luminaria.recambio_tulipa}}
+                                            <a class='btn btn-xs btn-danger remove-item'>
+                                                <span class='glyphicon glyphicon-remove'></span>
+                                            </a>
                                         </li>
                                     {{pass}}
                                 {{pass}}
@@ -211,23 +213,31 @@
 
                     <div class="form-group">
                         <label for="relevamiento_imagen" class="col-xs-2 control-label">Imagen</label>
-                        <div class="col-xs-3">
-                            <input type="file" capture="camera" id="relevamiento_imagen1" name='imagen1'>
-                            {{if relevamiento and relevamiento.imagen1:}}
-                                <img src='../upload/{{=relevamiento.imagen1}}' width="40%" height="40%" />
-                            {{pass}}
-                        </div>
-                        <div class="col-xs-3">
-                            <input type="file" capture="camera" id="relevamiento_imagen2" name='imagen2'>
-                            {{if relevamiento and relevamiento.imagen2:}}
-                                <img src='../upload/{{=relevamiento.imagen2}}' width="40%" height="40%" />
-                            {{pass}}
-                        </div>
-                        <div class="col-xs-3">
-                            <input type="file" capture="camera" id="relevamiento_imagen3" name='imagen3'>
-                            {{if relevamiento and relevamiento.imagen3:}}
-                                <img src='../upload/{{=relevamiento.imagen3}}' width="40%" height="40%" />
-                            {{pass}}
+                        <div class='col-xs-8'>
+                            <div class='row image-separator'>
+                                <div class="col-xs-8">
+                                    <input type="file" capture="camera" id="relevamiento_imagen1" name='imagen1'>
+                                    {{if relevamiento and relevamiento.imagen1:}}
+                                        <img src='../upload/{{=relevamiento.imagen1}}' width="40%" height="40%" />
+                                    {{pass}}
+                                </div>
+                            </div>
+                            <div class='row image-separator'>
+                                <div class="col-xs-8">
+                                    <input type="file" capture="camera" id="relevamiento_imagen2" name='imagen2'>
+                                    {{if relevamiento and relevamiento.imagen2:}}
+                                        <img src='../upload/{{=relevamiento.imagen2}}' width="40%" height="40%" />
+                                    {{pass}}
+                                </div>
+                            </div>
+                            <div class='row image-separator'>
+                                <div class="col-xs-8">
+                                    <input type="file" capture="camera" id="relevamiento_imagen3" name='imagen3'>
+                                    {{if relevamiento and relevamiento.imagen3:}}
+                                        <img src='../upload/{{=relevamiento.imagen3}}' width="40%" height="40%" />
+                                    {{pass}}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
