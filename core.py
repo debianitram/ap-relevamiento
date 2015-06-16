@@ -1,4 +1,4 @@
-from gluon import SELECT, OPTION, TAG
+from gluino import SELECT, OPTION, TAG
 from models import OPCIONES
 
 def validate(Table, values):

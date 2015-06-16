@@ -23,11 +23,17 @@
                     </div>
                     <div class="form-group">
                         <label for="lampara_modelo_artefacto" class="control-label">Modelo Artefacto</label>
-                        <input type="string" class="form-control" id="lampara_modelo_artefacto" name='modelo_artefacto'>
+                        <select class="form-control" id="lampara_modelo_artefacto" name='modelo_artefacto'>
+                            {{=fn_select('', 'modelo')}}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="lampara_proteccion" class="control-label">Necesita recambio tulipa?</label>
                         <input type="checkbox" class="form-control" id="lampara_proteccion" name='recambio_tulipa'>
+                    </div>
+                    <div class="form-group">
+                        <label for="lampara_limpieza" class="control-label">Necesita limpieza tulipa?</label>
+                        <input type="checkbox" class="form-control" id="lampara_limpieza" name='limpieza_tulipa'>
                     </div>
                     <div class='form-group'>
                         <button type='submit' class='btn btn-primary btn-sm'> Guardar </button>

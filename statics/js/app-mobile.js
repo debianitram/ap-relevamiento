@@ -2,7 +2,7 @@
 var windowResizeHandler = function() {
     window_height = $(window).height();
     columns_view = $('#columns-view').height();
-    $('#down').height(window_height - columns_view - 150);
+    $('#area-relevamiento').height(window_height - columns_view - 150);
 }
 
 var ProcessLampara = function(){
@@ -48,6 +48,62 @@ var initInfoExtra = function(){
     else if (Sosten.val() == 'ha'){
         $('#sujecion-extra').show();
     }
+}
+
+
+var UploadFields = function(){
+
+    $(document).on('change', '.camera',
+        function(event){
+            var file = event.currentTarget;
+            var relevamiento = $('#relevamiento_id').val();
+
+            var fd = new FormData();
+            //fd.append(file.id, file.files[0]);
+            fd.append(file.id, file.value.replace('C:\\fakepath\\', ''));
+            fd.append('id', file.id);
+            fd.append('relevamiento', relevamiento);
+
+            var xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', UploadProgress, false);
+            xhr.addEventListener('load', UploadComplete, false);
+            xhr.addEventListener('error', UploadFailed, false);
+            xhr.addEventListener('abort', UploadCanceled, false);
+            xhr.open('POST', '/upload-image');
+            xhr.send(fd)
+        }
+    );
+
+    function UploadProgress(evt) {
+        console.log(evt);
+        // if (evt.lengthComputable) {
+        //   var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+        //   document.getElementById('progress').innerHTML = percentComplete.toString() + '%';
+        // }
+        // else { 
+        //   document.getElementById('progress').innerHTML = 'unable to compute'; 
+        // } 
+    }
+ 
+    function UploadComplete(evt) { 
+        /* This event is raised when the server send back a response */
+        if (evt.target.status == 406) {
+            alert('Debe guargar el relevamiento antes de cargar una imagen');
+        }
+        else if (evt.target.status == 200) {
+            data = JSON.parse(evt.target.response);
+            $('#frame-'+data.id).append("<span class='badge'>"+data.image+"</span>");
+        }
+    }
+ 
+    function UploadFailed(evt) { 
+        alert("Error al intentar cargar el archivo"); 
+    }
+ 
+    function UploadCanceled(evt) {
+        alert("Carga cancelada");
+    }
+
 }
 
 var RemoveItem = function(){
@@ -117,6 +173,22 @@ var InfoExtra = function(){
     });
 }
 
+var EventsTouch = function(){
+    
+    $("#area-relevamiento").swipe({
+        //Generic swipe handler for all directions
+        swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+            if (direction == 'right') {
+                jQuery('#btn-previous').trigger('click');
+                alert(direction);
+            }
+            else if (direction == 'left') {
+                jQuery('#btn-next').trigger('click');
+            }
+        }
+    });
+}
+
 
 var Init = function(){
     windowResizeHandler();
@@ -124,6 +196,7 @@ var Init = function(){
         function(){
             Modal.modal('show');
     });
+    UploadFields();
     RemoveItem();
     ProcessLampara();
     initInfoExtra();

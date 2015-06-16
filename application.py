@@ -1,3 +1,6 @@
+#qpy:webapp:Hello Qpython
+#qpy://127.0.0.1:8080/
+
 import os
 
 from bottle import route, run
