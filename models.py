@@ -7,7 +7,7 @@ from gluino import IS_NOT_EMPTY, IS_EMPTY_OR, IS_IN_DB
 
 print ('#######  Cargando ...')
 
-system = 'desktop'
+system = 'mobile'
 
 if system == 'desktop':
     APP_DIR = os.getcwd()
@@ -27,7 +27,12 @@ FOLDER_TEMPLATES = os.path.join(APP_DIR, 'templates')
 ESTADO = ('', 'Excelente', 'Bueno', 'Malo')
 ACOMETIDA = ('', 'Aerea', 'Subterranea')
 SOSTEN = ('', 'Columna', 'Madera', 'HA')
-PUESTA_TIERRA = ('', 'Si', 'No', 'Discontinua')
+PUESTA_TIERRA = ('',
+                 'Si',
+                 'No',
+                 'Discontinua',
+                 'No se ve')
+
 TIPO_LAMPARA = ('',
                 'SAP 100',
                 'SAP 150',
@@ -36,9 +41,12 @@ TIPO_LAMPARA = ('',
                 'ML E27',
                 'ML E40',)
 MODELO = ('',
-          'SIEMENS 5NA 378, hasta 400W',
+          'SIEMENS 5NA 378',
+          'SIEMENS 5NA 378',
+          'PANTALLA P/MEZCLADORA',
           'MODELO I',
-          'MODELO II')
+          'MODELO II',
+          'MODELO III')
 
 OPCIONES = {'estado': ESTADO,
             'acometida': ACOMETIDA,
@@ -77,6 +85,7 @@ Relevamiento = db.define_table('relevamiento',
                 Field('base_sello', 'boolean'),
                 Field('base_madera', 'string', length=50),
                 Field('boca_inspeccion', 'boolean'),
+                Field('tapa_inspeccion', 'boolean'),
                 Field('columna_reacondicionada', 'boolean'),
                 Field('sujecion_brazo', 'string', length=20),
                 Field('acometida', 'string', length=250),

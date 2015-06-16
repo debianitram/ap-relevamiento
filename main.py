@@ -104,6 +104,7 @@ def form_relevamiento():
     vars.update(base_oxido=vars.get('base_oxido', False))
     vars.update(base_sello=vars.get('base_sello', False))
     vars.update(boca_inspeccion=vars.get('boca_inspeccion', False))
+    vars.update(tapa_inspeccion=vars.get('tapa_inspeccion', False))
     vars.update(necesita_poda=vars.get('necesita_poda', False))
     vars.update(intervencion_inmediata=vars.get('intervencion_inmediata', False))
 
